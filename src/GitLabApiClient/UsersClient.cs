@@ -17,16 +17,23 @@ namespace GitLabApiClient
     /// </summary>
     public sealed class UsersClient
     {
-        private readonly GitLabHttpFacade _httpFacade;
+        private readonly IGitLabHttpFacade _httpFacade;
 
-        internal UsersClient(GitLabHttpFacade httpFacade) => 
+        internal UsersClient(IGitLabHttpFacade httpFacade) => 
             _httpFacade = httpFacade;
 
         /// <summary>
         /// Retrieves registered users.
         /// </summary>
-        public async Task<IList<User>> GetAsync() => 
-            await _httpFacade.GetPagedList<User>("users");
+        public async Task<IList<User>> GetAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var registration = cancellationToken.Register(cancellationToken.ThrowIfCancellationRequested))
+            {
+            }
+            return await _httpFacade.GetPagedList<User>("users");
+        } 
+            
 
         /// <summary>
         /// Retrieves an user matched by name.

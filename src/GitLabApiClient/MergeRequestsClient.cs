@@ -18,12 +18,12 @@ namespace GitLabApiClient
     /// </summary>
     public sealed class MergeRequestsClient
     {
-        private readonly GitLabHttpFacade _httpFacade;
+        private readonly IGitLabHttpFacade _httpFacade;
         private readonly MergeRequestsQueryBuilder _mergeRequestsQueryBuilder;
         private readonly ProjectMergeRequestsQueryBuilder _projectMergeRequestsQueryBuilder;
 
         internal MergeRequestsClient(
-            GitLabHttpFacade httpFacade,
+            IGitLabHttpFacade httpFacade,
             MergeRequestsQueryBuilder mergeRequestsQueryBuilder,
             ProjectMergeRequestsQueryBuilder projectMergeRequestsQueryBuilder)
         {

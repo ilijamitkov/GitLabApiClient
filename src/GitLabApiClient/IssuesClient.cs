@@ -18,12 +18,12 @@ namespace GitLabApiClient
     /// </summary>
     public sealed class IssuesClient
     {
-        private readonly GitLabHttpFacade _httpFacade;
+        private readonly IGitLabHttpFacade _httpFacade;
         private readonly IssuesQueryBuilder _queryBuilder;
         private readonly ProjectIssuesQueryBuilder _projectIssuesQueryBuilder;
 
         internal IssuesClient(
-            GitLabHttpFacade httpFacade, 
+            IGitLabHttpFacade httpFacade, 
             IssuesQueryBuilder queryBuilder,
             ProjectIssuesQueryBuilder projectIssuesQueryBuilder)
         {

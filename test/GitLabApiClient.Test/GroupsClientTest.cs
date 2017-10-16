@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,10 +33,10 @@ namespace GitLabApiClient.Test
         }
         
         [Fact]
-        public async Task ProjectsCanBeTransferToGroup()
+        public async Task ProjectsCanBeTransferToGroup_Throws_when_project_already_in_group()
         {
-            var group = await _sut.TransferAsync(TestGroupName, TestProjectId.ToString(), CancellationToken.None);
-            group.Projects.Should().NotBeEmpty();
+            Func<Task> action = () => _sut.TransferAsync(TestGroupName, TestProjectId.ToString(), CancellationToken.None);
+            await Assert.ThrowsAsync<GitLabException>(action);
         }
 
         [Fact]

@@ -13,7 +13,7 @@ namespace GitLabApiClient
     /// </summary>
     public sealed class GitLabClient
     {
-        private readonly GitLabHttpFacade _httpFacade;
+        private readonly IGitLabHttpFacade _httpFacade;
 
         /// <summary>
         /// Creates a new instance of the GitLab API v4 client pointing to the specified hostUrl.
@@ -33,50 +33,55 @@ namespace GitLabApiClient
                 jsonSerializer,
                 authenticationToken);
 
-            var projectQueryBuilder = new ProjectsQueryBuilder();
-            var projectIssuesQueryBuilder = new ProjectIssuesQueryBuilder();
-            var issuesQueryBuilder = new IssuesQueryBuilder();
-            var mergeRequestsQueryBuilder = new MergeRequestsQueryBuilder();
-            var projectMergeRequestsQueryBuilder = new ProjectMergeRequestsQueryBuilder();
-            var groupsQueryBuilder = new GroupsQueryBuilder();
-            var projectsGroupsQueryBuilder = new ProjectsGroupQueryBuilder();
+            InitClients();
+        }
 
-            Issues = new IssuesClient(_httpFacade, issuesQueryBuilder, projectIssuesQueryBuilder);
-            MergeRequests = new MergeRequestsClient(_httpFacade, mergeRequestsQueryBuilder, projectMergeRequestsQueryBuilder);
-            Projects = new ProjectsClient(_httpFacade, projectQueryBuilder);
-            Users = new UsersClient(_httpFacade);
-            Groups = new GroupsClient(_httpFacade, groupsQueryBuilder, projectsGroupsQueryBuilder);
+        
+        /// <summary>
+        /// Creates a new instance of the GitLab API v4 client pointing to the specified hostUrl.
+        /// </summary>
+        /// <param name="httpFacade">Http Facade </param>
+        public GitLabClient(IGitLabHttpFacade httpFacade)
+        {
+            _httpFacade = httpFacade;
+            InitClients();
         }
 
         /// <summary>
         /// Access GitLab's issues API.
         /// </summary>
-        public IssuesClient Issues { get; }
+        public IssuesClient Issues { get; private set; }
 
         /// <summary>
         /// Access GitLab's merge requests API.
         /// </summary>
-        public MergeRequestsClient MergeRequests { get; }
+        public MergeRequestsClient MergeRequests { get; private set; }
 
         /// <summary>
         /// Access GitLab's projects API.
         /// </summary>
-        public ProjectsClient Projects { get; }
+        public ProjectsClient Projects { get; private set; }
 
         /// <summary>
         /// Access GitLab's users API.
         /// </summary>
-        public UsersClient Users { get; }
+        public UsersClient Users { get; private set; }
 
         /// <summary>
         /// Access GitLab's groups API.
         /// </summary>
-        public GroupsClient Groups { get; }
+        public GroupsClient Groups { get; private set; }
+        
+        
+        /// <summary>
+        /// Access GitLab's Branches API.
+        /// </summary>
+        public BranchesClient Branches { get; private set; }
 
         /// <summary>
         /// Host address of GitLab instance. For example https://gitlab.example.com or https://gitlab.example.com/api/v4/.
         /// </summary>
-        public string HostUrl { get; }
+        public string HostUrl { get; private set; }
 
         /// <summary>
         /// Authenticates with GitLab API using user credentials.
@@ -97,6 +102,25 @@ namespace GitLabApiClient
                 url += "/api/v4/";
 
             return url;
+        }
+
+        private void InitClients()
+        {
+            var projectQueryBuilder = new ProjectsQueryBuilder();
+            var projectIssuesQueryBuilder = new ProjectIssuesQueryBuilder();
+            var issuesQueryBuilder = new IssuesQueryBuilder();
+            var mergeRequestsQueryBuilder = new MergeRequestsQueryBuilder();
+            var projectMergeRequestsQueryBuilder = new ProjectMergeRequestsQueryBuilder();
+            var groupsQueryBuilder = new GroupsQueryBuilder();
+            var projectsGroupsQueryBuilder = new ProjectsGroupQueryBuilder();
+            var branchesQueryBuilder = new BranchesQueryBuilder();
+
+            Issues = new IssuesClient(_httpFacade, issuesQueryBuilder, projectIssuesQueryBuilder);
+            MergeRequests = new MergeRequestsClient(_httpFacade, mergeRequestsQueryBuilder, projectMergeRequestsQueryBuilder);
+            Projects = new ProjectsClient(_httpFacade, projectQueryBuilder);
+            Users = new UsersClient(_httpFacade);
+            Groups = new GroupsClient(_httpFacade, groupsQueryBuilder, projectsGroupsQueryBuilder);
+            Branches = new BranchesClient(_httpFacade, branchesQueryBuilder);
         }
     }
 }

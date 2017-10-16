@@ -18,12 +18,12 @@ namespace GitLabApiClient
     /// </summary>
     public sealed class GroupsClient
     {
-        private readonly GitLabHttpFacade _httpFacade;
+        private readonly IGitLabHttpFacade _httpFacade;
         private readonly GroupsQueryBuilder _queryBuilder;
         private readonly ProjectsGroupQueryBuilder _projectsQueryBuilder;
 
         internal GroupsClient(
-            GitLabHttpFacade httpFacade,
+            IGitLabHttpFacade httpFacade,
             GroupsQueryBuilder queryBuilder,
             ProjectsGroupQueryBuilder projectsQueryBuilder)
         {

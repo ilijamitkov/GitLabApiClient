@@ -19,10 +19,10 @@ namespace GitLabApiClient
     /// </summary>
     public sealed class ProjectsClient
     {
-        private readonly GitLabHttpFacade _httpFacade;
+        private readonly IGitLabHttpFacade _httpFacade;
         private readonly ProjectsQueryBuilder _queryBuilder;
 
-        internal ProjectsClient(GitLabHttpFacade httpFacade, ProjectsQueryBuilder queryBuilder)
+        internal ProjectsClient(IGitLabHttpFacade httpFacade, ProjectsQueryBuilder queryBuilder)
         {
             _httpFacade = httpFacade;
             _queryBuilder = queryBuilder;
@@ -32,8 +32,16 @@ namespace GitLabApiClient
         /// Retrieves project by it's id.
         /// </summary>
         /// <param name="projectId">Id of the project.</param>
-        public async Task<Project> GetAsync(int projectId) =>
-            await _httpFacade.Get<Project>($"projects/{projectId}");
+        /// <param name="cancellationToken">Request CancellationToken</param>
+        public async Task<Project> GetAsync(int projectId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var registration = cancellationToken.Register(cancellationToken.ThrowIfCancellationRequested))
+            {
+            }
+            return await _httpFacade.Get<Project>($"projects/{projectId}");
+        }
+            
 
         /// <summary>
         /// Get a list of visible projects for authenticated user. 

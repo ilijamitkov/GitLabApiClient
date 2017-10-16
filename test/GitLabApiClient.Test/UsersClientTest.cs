@@ -14,16 +14,18 @@ namespace GitLabApiClient.Test
         public async Task CurrentUserSessionCanBeRetrieved()
         {
             var session = await _sut.GetCurrentSessionAsync(CancellationToken.None);
-            session.Username.Should().Be("test-gitlabapiclient");
-            session.Name.Should().Be("test-gitlabapiclient");
+            session.Username.Should().Be("root");
+            session.Name.Should().Be("Administrator");
         }
 
         [Fact]
         public async Task UserRetrievedByName()
         {
-            var user = await _sut.GetAsync("test-gitlabapiclient", CancellationToken.None);
-            user.Username.Should().Be("test-gitlabapiclient");
-            user.Name.Should().Be("test-gitlabapiclient");
+            var user = await _sut.GetAsync("root", CancellationToken.None);
+            
+            Assert.NotNull(user);
+            Assert.Equal(user.Username, "root");
+            Assert.Equal(user.Name, "Administrator");
         }
 
         [Fact]
